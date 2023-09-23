@@ -1,0 +1,47 @@
+.shops {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  list-style: none;
+}
+
+.shopTab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.shopTab.best {
+  box-shadow: 0 0 20px 2px rgb(248, 207, 113);
+}
+
+.shopContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  height: 2.5rem;
+}
+
+.shopContainer .shopImg {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  filter: brightness(0.6);
+}
+
+.shopTab.active .shopImg {
+  box-sizing: border-box;
+  filter: brightness(1) drop-shadow(0 0px 30px rgba(255, 255, 255, 0.375));
+}
+
+.loadingStores {
+  text-align: center;
+  font-size: 1.4rem;
+}
+
+.shopLocation {
+  text-align: center;
+}

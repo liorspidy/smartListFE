@@ -1,0 +1,114 @@
+.left,
+.right {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.right .productName {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  /* width: 100%; */
+  text-overflow: ellipsis;
+}
+
+.right .productBrand {
+  font-size: 0.8rem;
+}
+
+.left {
+  align-items: flex-end;
+}
+.left .productPrice {
+  font-size: 1.2rem;
+}
+
+.list .listItem:last-child {
+  border: none;
+}
+
+.listItem {
+  border-bottom: 1px solid #cccccc56;
+  display: flex;
+  color: var(--text-color);
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8.1px);
+  justify-content: center;
+  align-items: center;
+  height: 4.5rem;
+  overflow: hidden;
+}
+
+.listItem.swiped {
+  filter: opacity(0.7);
+  transition: 400ms;
+}
+
+.listItem .pre {
+  display: flex;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.25);
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.listItem .pre .count {
+  font-size: 1.25rem;
+  flex: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.listItem .pre .countActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex: 0.25;
+  padding: 6px;
+}
+
+.listItem .pre .countActions .countIcon {
+  border-radius: 50%;
+  background-color: white;
+  color: var(--icon-color);
+  font-size: 1.25rem;
+}
+
+.listItem .content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  flex: 4.4;
+}
+
+.listItem .removeItem {
+  padding: 1.5rem;
+  background: linear-gradient(to left, #ba1b1b, #a40808);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: -100%;
+  transition: 400ms;
+  z-index: 15;
+}
+
+.removeItem svg {
+  height: 2rem;
+  width: 2rem;
+}
+
+.listItem .removeItem.active {
+  left: 0;
+}

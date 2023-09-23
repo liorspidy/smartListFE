@@ -1,0 +1,20 @@
+:root {
+  --icon-size: 2rem;
+  --icon-size-main: 3.8rem;
+  --icon-color: #404548;
+  --icon-secondary-color: #5e6162;
+  --background-color: #7533bb;
+  --secondary-color: #a16dbd;
+  --text-color: #fafafa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  direction: rtl;
+}

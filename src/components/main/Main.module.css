@@ -1,0 +1,8 @@
+.main {
+  background: linear-gradient(var(--secondary-color), var(--background-color));
+  height: calc(100vh - 3rem);
+  width: 100%;
+  color: white;
+  padding: 2rem 1rem;
+  overflow: hidden;
+}
