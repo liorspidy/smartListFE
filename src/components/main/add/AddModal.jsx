@@ -39,7 +39,7 @@ const AddModal = ({
         amount: amount,
       };
 
-      fetch("https://woolen-shade-pea.glitch.me/addProduct", {
+      fetch("https://smartlist.glitch.me/addProduct", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,10 +50,11 @@ const AddModal = ({
         .then((data) => {
           // After successfully adding the product, fetch the updated cart
           fetchCurrentCart();
-          setLoading(false);
         })
         .catch((error) => {
           console.error("Error adding product to the basket:", error);
+        }).finally(()=>{
+          setLoading(false);
         });
     }
     restartModal();

@@ -75,7 +75,7 @@ const AddToDb = ({ shopsList, fetchCurrentCart, fetchProducts ,setLoading}) => {
       });
 
       const response = await fetch(
-        "https://woolen-shade-pea.glitch.me/addProductToDB",
+        "https://smartlist.glitch.me/addProductToDB",
         {
           method: "POST",
           headers: {
@@ -94,14 +94,16 @@ const AddToDb = ({ shopsList, fetchCurrentCart, fetchProducts ,setLoading}) => {
 
       if (response.status === 200) {
         // Successfully added the product
-        console.log("Product added successfully!");
-        // You can optionally reset the form here
         setFormData({
           productName: "",
           brand: "",
           amount: "1",
           volume: "",
           measurementUnit: "grams",
+          // Reset prices to empty string
+          ...Object.fromEntries(
+            shopsList.map((shop) => [`${shop.id}_price`, ""])
+          ),
         });
         fetchProducts();
         fetchCurrentCart();
@@ -142,9 +144,9 @@ const AddToDb = ({ shopsList, fetchCurrentCart, fetchProducts ,setLoading}) => {
       >
         <p className={classes.status}>
           המוצר נוסף בהצלחה
-          <div className={classes.checkmark}>
+          <span className={classes.checkmark}>
             <CheckIcon />
-          </div>
+          </span>
         </p>
       </motion.div>
       <div className={classes.tabs}>

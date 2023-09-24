@@ -20,7 +20,7 @@ const List = ({
     try {
       setLoading(true);
       const response = await fetch(
-        "https://woolen-shade-pea.glitch.me/getCurrentCart"
+        "https://smartlist.glitch.me/getCurrentCart"
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -47,7 +47,7 @@ const List = ({
   const addAmount = async (productId) => {
     try {
       setLoading(true);
-      await fetch("https://woolen-shade-pea.glitch.me/addAmount", {
+      await fetch("https://smartlist.glitch.me/addAmount", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,9 +56,10 @@ const List = ({
       });
       // Fetch the updated current cart after adding the amount
       fetchCurrentCart();
-      setLoading(false);
     } catch (error) {
       console.error("Error adding quantity to product:", error);
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -66,7 +67,7 @@ const List = ({
   const decAmount = async (productId) => {
     try {
       setLoading(true);
-      await fetch("https://woolen-shade-pea.glitch.me/decAmount", {
+      await fetch("https://smartlist.glitch.me/decAmount", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,9 +76,10 @@ const List = ({
       });
       // Fetch the updated current cart after decreasing the amount
       fetchCurrentCart();
-      setLoading(false);
     } catch (error) {
       console.error("Error decreasing quantity of product:", error);
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -92,6 +94,7 @@ const List = ({
             addAmount={addAmount}
             decAmount={decAmount}
             fetchCurrentCart={fetchCurrentCart}
+            setLoading={setLoading}
           />
         );
       }

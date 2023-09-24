@@ -30,11 +30,11 @@ const EditModal = ({
   const editProductHandler = async (e) => {
     e.stopPropagation();
     setCurrentPage("editproduct");
-
+  
     if (pickedProductId) {
       try {
         setLoading(true);
-        const response = await fetch(`https://woolen-shade-pea.glitch.me/getProductById/${pickedProductId}`);
+        const response = await fetch(`https://smartlist.glitch.me/getProductById/${pickedProductId}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -43,16 +43,25 @@ const EditModal = ({
           console.error("Error:", data.error);
         } else {
           const product = data.product;
-          setPickedProduct(product);
+  
+          // Update the prices inside the product object
+          const productWithPrices = { ...product };
+          productWithPrices.prices = product.prices.reduce((priceMap, priceItem) => {
+            priceMap[priceItem.shop_id] = priceItem.price;
+            return priceMap;
+          }, {});
+  
+          setPickedProduct(productWithPrices);
         }
         setLoading(false);
       } catch (error) {
         console.error("Fetch error:", error);
       }
     }
-
+  
     restartModal();
   };
+  
 
   const editShopHandler = (e) => {
     e.stopPropagation();

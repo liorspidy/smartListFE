@@ -2,33 +2,55 @@
 import { useEffect, useState } from "react";
 import classes from "./EditProduct.module.css";
 import CheckIcon from "@mui/icons-material/Check";
-import SaveIcon from '@mui/icons-material/Save';
-import DeleteIcon from '@mui/icons-material/Delete'; 
+import SaveIcon from "@mui/icons-material/Save";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { motion } from "framer-motion";
 
-const EditProduct = ({ shopsList, fetchCurrentCart, fetchProducts , pickedProduct, setLoading }) => {
+const EditProduct = ({
+  shopsList,
+  fetchCurrentCart,
+  fetchProducts,
+  pickedProduct,
+  setLoading,
+}) => {
   const [formData, setFormData] = useState({
     productName: "",
     brand: "",
     amount: "1",
     volume: "",
     measurementUnit: "grams",
+    ...Object.fromEntries(
+      shopsList.map((shop) => [`${shop.id}_price`, ""])
+    ),
   });
   const [validationErrors, setValidationErrors] = useState({});
   const [isEdited, setIsEdited] = useState(false);
+  const [deletionSuccess, setDeletionSuccess] = useState(false);
+  const [deletionError, setDeletionError] = useState("");
+  const [updateError, setUpdateError] = useState("");
 
-    // Update formData with pickedProduct when it changes
-    useEffect(() => {
-      if (pickedProduct) {
-        setFormData({
-          productName: pickedProduct.name,
-          brand: pickedProduct.brand,
-          amount: pickedProduct.amount.toString(),
-          volume: pickedProduct.volume,
-          measurementUnit: pickedProduct.volume_unit_id === 1 ? "grams" : "liters", // Adjust as needed
-        });
-      }
-    }, [pickedProduct]);
+  useEffect(() => {
+    if (pickedProduct) {
+      setFormData({
+        productName: pickedProduct.name,
+        brand: pickedProduct.brand,
+        amount: pickedProduct.amount.toString(),
+        volume: pickedProduct.volume,
+        measurementUnit:
+          pickedProduct.volume_unit === "grams"
+            ? "grams"
+            : pickedProduct.volume_unit === "kilos"
+            ? "kilos"
+            : "liters",
+        ...Object.fromEntries(
+          shopsList.map((shop) => [
+            `${shop.id}_price`,
+            pickedProduct.prices[shop.id] === "9999.00" ? "" : pickedProduct.prices[shop.id] || "",
+          ])
+        ),
+      });
+    }
+  }, [pickedProduct]);
 
   const variants = {
     open: { y: "3rem", opacity: 1, transition: { duration: 0.2 } },
@@ -37,13 +59,14 @@ const EditProduct = ({ shopsList, fetchCurrentCart, fetchProducts , pickedProduc
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (isEdited) {
+      if (isEdited || deletionSuccess) {
         setIsEdited(false);
+        setDeletionSuccess(false);
       }
     }, 1500);
 
     return () => clearTimeout(timeout);
-  }, [isEdited]);
+  }, [isEdited, deletionSuccess]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -76,23 +99,26 @@ const EditProduct = ({ shopsList, fetchCurrentCart, fetchProducts , pickedProduc
 
     try {
       setLoading(true);
-      // Prepare prices object from the input fields
       const pricesObj = {};
       shopsList.forEach((shop) => {
         const price = parseFloat(formData[`${shop.id}_price`]);
         if (!isNaN(price) && price > 0) {
           pricesObj[shop.id] = price;
         }
+        if(isNaN(price)){
+          pricesObj[shop.id] = 9999;
+        }
       });
 
       const response = await fetch(
-        "https://woolen-shade-pea.glitch.me/addProductToDB",
+        "https://smartlist.glitch.me/updateProduct",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            productId: pickedProduct.id,
             name: formData.productName,
             brand: formData.brand,
             amount: formData.amount,
@@ -104,63 +130,99 @@ const EditProduct = ({ shopsList, fetchCurrentCart, fetchProducts , pickedProduc
       );
 
       if (response.status === 200) {
-        // Successfully added the product
-        console.log("Product added successfully!");
-        // You can optionally reset the form here
-        setFormData({
-          productName: "",
-          brand: "",
-          amount: "1",
-          volume: "",
-          measurementUnit: "grams",
-        });
         fetchProducts();
         fetchCurrentCart();
         setIsEdited(true);
-        setLoading(false);
       } else {
-        // Handle server error here
-        console.error("Error adding product:", response.statusText);
+        setUpdateError("Error updating product"); // Set update error message
+        console.error("Error updating product:", response.statusText);
       }
     } catch (error) {
-      console.error("Error adding product:", error.message);
+      setUpdateError("Error updating product"); // Set update error message
+      console.error("Error updating product:", error.message);
+    }finally{
+      setLoading(false);
     }
   };
 
-  const inputPrices = shopsList.map((shop) => {
-    return (
-      <li className={classes.priceItem} key={shop.id}>
-        <div className={classes.storeLogo}>
-          <img src={shop.img} alt={shop.name} />
-        </div>
-        <input
-          type="text"
-          name={`${shop.id}_price`} // Use shop ID to uniquely identify prices
-          value={formData[`${shop.id}_price`]}
-          placeholder="הזן מחיר..."
-          onChange={handleInputChange} // Handle price changes
-        />
-      </li>
-    );
-  });
+  const deleteProductHandler = async () => {
+    const id = pickedProduct.id;
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://smartlist.glitch.me/deleteProduct/${id}`,{
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id }),
+        }
+      );
+
+      if (response.status === 200) {
+        setDeletionSuccess(true);
+        setDeletionError("");
+        fetchProducts();
+        fetchCurrentCart();
+      } else {
+        setDeletionSuccess(false);
+        setDeletionError("Error deleting product");
+        console.error("Error deleting product:", response.statusText);
+      }
+    } catch (error) {
+      setDeletionSuccess(false);
+      setDeletionError("Error deleting product");
+      console.error("Error deleting product:", error);
+    }finally{
+      setLoading(false);
+    }
+  };
+
+  const inputPrices = shopsList.map((shop) => (
+    <li className={classes.priceItem} key={shop.id}>
+      <div className={classes.storeLogo}>
+        <img src={shop.img} alt={shop.name} />
+      </div>
+      <input
+        type="text"
+        name={`${shop.id}_price`}
+        value={formData[`${shop.id}_price`]}
+        placeholder="הזן מחיר..."
+        onChange={handleInputChange}
+      />
+    </li>
+  ));
 
   return (
     <div className={classes.editindb}>
       <motion.div
         className={classes.finalStatus}
-        animate={isEdited ? "open" : "closed"}
+        animate={(isEdited || deletionSuccess) ? "open" : "closed"}
         variants={variants}
       >
-        <p className={classes.status}>
-          המוצר עודכן בהצלחה
-          <div className={classes.checkmark}>
-            <CheckIcon />
-          </div>
-        </p>
+        {isEdited && updateError === "" ? (
+          <p className={classes.status}>
+            המוצר עודכן בהצלחה
+            <span className={classes.checkmark}>
+              <CheckIcon />
+            </span>
+          </p>
+        ) : deletionSuccess && deletionError === "" ? (
+          <p className={classes.status}>
+            המוצר נמחק בהצלחה
+            <span className={classes.checkmark}>
+              <CheckIcon />
+            </span>
+          </p>
+        ) : null}
       </motion.div>
       <div className={classes.tabs}>
-        <motion.button className={classes.tab} whileTap={{scale: 1.1}}>מוצר</motion.button>
-        <motion.button className={classes.tab} whileTap={{scale: 1.1}}>חנות</motion.button>
+        <motion.button className={classes.tab} whileTap={{ scale: 1.1 }}>
+          מוצר
+        </motion.button>
+        <motion.button className={classes.tab} whileTap={{ scale: 1.1 }}>
+          חנות
+        </motion.button>
       </div>
       <form onSubmit={handleSubmit} className={classes.form}>
         <div className={classes.formContent}>
@@ -239,14 +301,19 @@ const EditProduct = ({ shopsList, fetchCurrentCart, fetchProducts , pickedProduc
           <ul className={classes.inputPricesContainer}>{inputPrices}</ul>
         </div>
         <div className={classes.editActions}>
-        <motion.button className={classes.editAction} type="submit" whileTap={{scale: 1.1}}>
-          סיימתי
-          <SaveIcon/>
-        </motion.button>
-        <motion.button className={classes.editAction} whileTap={{scale: 1.1}}>
-          הסר מוצר
-          <DeleteIcon/>
-        </motion.button>
+          <motion.button className={classes.editAction} whileTap={{ scale: 1.1 }} type="submit">
+            סיימתי
+            <SaveIcon />
+          </motion.button>
+          <motion.button
+            className={classes.editAction}
+            type="button" 
+            whileTap={{ scale: 1.1 }}
+            onClick={deleteProductHandler}
+          >
+            הסר מוצר
+            <DeleteIcon />
+          </motion.button>
         </div>
       </form>
     </div>

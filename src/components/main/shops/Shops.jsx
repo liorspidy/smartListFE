@@ -19,7 +19,7 @@ const Shops = ({
       try {
         setLoading(true);
         const response = await fetch(
-          "https://woolen-shade-pea.glitch.me/getShops"
+          "https://smartlist.glitch.me/getShops"
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");

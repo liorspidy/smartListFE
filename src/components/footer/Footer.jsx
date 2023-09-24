@@ -11,6 +11,7 @@ const Footer = ({
   setIsAddingModalOpen,
   setCurrentPage,
   setIsEditingModalOpen,
+  setIsRemovingModalOpen
 }) => {
   const openAddingModalHandler = () => {
     setIsAddingModalOpen(true);
@@ -20,9 +21,17 @@ const Footer = ({
     setIsEditingModalOpen(true);
   };
 
+  const openRemovingModalHandler = () => {
+    setIsRemovingModalOpen(true);
+  };
+
   return (
     <div className={classes.footer}>
-      <motion.div className={classes.iconBox} whileTap={{ scale: 1.15 }}>
+      <motion.div 
+        className={classes.iconBox}
+        whileTap={{ scale: 1.15 }}
+        onClick={openRemovingModalHandler}
+        >
         <DeleteIcon className={classes.icon} />
       </motion.div>
 

@@ -10,6 +10,7 @@ const ListItem = ({ product, idx, addAmount, decAmount, fetchCurrentCart ,setLoa
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [isSwiped, setIsSwiped] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [isNoPrice , setIsNoPrice] = useState(false);
 
   const handleTouchStart = (e) => {
@@ -21,19 +22,29 @@ const ListItem = ({ product, idx, addAmount, decAmount, fetchCurrentCart ,setLoa
   };
 
   const handleTouchEnd = () => {
-    if (touchStart - touchEnd < 75) {
-      setIsSwiped(true);
+    //swipe left
+    if (touchStart - touchEnd > 100) {
+      if(isSwiped){
+        setIsSwiped(false);
+      }else{
+        setIsChecked(true);
+      }
     }
-
-    if (touchStart - touchEnd > -75) {
-      setIsSwiped(false);
+    
+    //swipe right
+    if (touchStart - touchEnd < -100) {
+      if(!isChecked && !isSwiped){
+        setIsSwiped(true);
+      }else if(isChecked && !isSwiped){
+        setIsChecked(false);
+      }
     }
   };
 
   const handleRemoveClick = async (productId) => {
     try {
       setLoading(true);
-      await fetch("https://woolen-shade-pea.glitch.me/removeFromCart", {
+      await fetch("https://smartlist.glitch.me/removeFromCart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,9 +54,10 @@ const ListItem = ({ product, idx, addAmount, decAmount, fetchCurrentCart ,setLoa
       // Fetch the updated current cart after adding the amount
       fetchCurrentCart();
       setIsSwiped(false);
-      setLoading(false);
     } catch (error) {
       console.error("Error adding quantity to product:", error);
+    } finally{
+      setLoading(false);
     }
   };
 
@@ -57,7 +69,7 @@ const ListItem = ({ product, idx, addAmount, decAmount, fetchCurrentCart ,setLoa
 
   return (
     <li
-      className={`${classes.listItem} ${isSwiped || isNoPrice ? classes.swiped : ""}`}
+      className={`${classes.listItem} ${isSwiped || isNoPrice ? classes.swiped : isChecked ? classes.checked : ""}`}
       key={idx}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}

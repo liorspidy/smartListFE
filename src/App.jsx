@@ -8,10 +8,12 @@ import AddToDb from "./components/main/add/AddToDb";
 import EditProduct from "./components/main/edit/EditProduct";
 import EditModal from "./components/main/edit/EditModal";
 import Loading from "./components/loader/loading";
+import RemoveModal from "./components/main/remove/removeModal";
 
 function App() {
   const [isAddingModalOpen, setIsAddingModalOpen] = useState(false);
   const [isEditingModalOpen, setIsEditingModalOpen] = useState(false);
+  const [isRemovingModalOpen, setIsRemovingModalOpen] = useState(false);
   const [shopsList, setShopsList] = useState([]);
   const [products, setProducts] = useState([]);
   const [currentCart, setCurrentcart] = useState([]);
@@ -23,7 +25,7 @@ function App() {
     try {
       setLoading(true);
       const response = await fetch(
-        "https://woolen-shade-pea.glitch.me/getProducts"
+        "https://smartlist.glitch.me/getProducts"
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -40,7 +42,7 @@ function App() {
     try {
       setLoading(true);
       const response = await fetch(
-        "https://woolen-shade-pea.glitch.me/getCurrentCart"
+        "https://smartlist.glitch.me/getCurrentCart"
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -78,6 +80,14 @@ function App() {
         setPickedProduct={setPickedProduct}
         setLoading={setLoading}
       />
+      <RemoveModal 
+        products={products}
+        isRemovingModalOpen={isRemovingModalOpen}
+        setIsRemovingModalOpen={setIsRemovingModalOpen}
+        setLoading={setLoading}
+        fetchProducts={fetchProducts}
+        fetchCurrentCart={fetchCurrentCart}
+      />
       {currentPage === "main" && (
         <Main
           isAddingModalOpen={isAddingModalOpen}
@@ -108,9 +118,10 @@ function App() {
         />
       )}
       <Footer
-        setIsAddingModalOpen={setIsAddingModalOpen}
         setCurrentPage={setCurrentPage}
+        setIsAddingModalOpen={setIsAddingModalOpen}
         setIsEditingModalOpen={setIsEditingModalOpen}
+        setIsRemovingModalOpen={setIsRemovingModalOpen}
       />
     </>
   );
