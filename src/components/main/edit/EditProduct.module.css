@@ -1,16 +1,15 @@
 .editindb {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   flex-direction: column;
   background: linear-gradient(var(--secondary-color), var(--background-color));
-  height: calc(100vh - 2.5rem);
+  height: calc(100vh - 3rem);
   width: 100%;
   color: white;
-  padding: 0 0.5rem;
-  padding-top: 2rem;
+  padding: 1rem 0.5rem;
+  padding-bottom: 6.5rem;
   overflow: hidden;
-  gap: 1rem;
 }
 
 .tabs {
@@ -18,10 +17,11 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
+  width: 100%;
+  height: 3rem;
 }
 
 .tab {
-  padding: 0.5rem 1rem;
   font-size: 1.2rem;
   border-radius: 15px;
   display: flex;
@@ -29,9 +29,9 @@
   align-items: center;
   background: linear-gradient(var(--icon-secondary-color), var(--icon-color));
   color: white;
-  min-width: 50%;
   border: none;
-  min-width: 8rem;
+  height: 3rem;
+  width: 8rem;
 }
 
 .form {
@@ -52,8 +52,6 @@
   gap: 1rem;
   width: 100%;
   overflow: auto;
-  /* max-height: 24rem; */
-  max-height: calc(100% - 15rem);
   justify-content: flex-start;
 }
 
@@ -99,6 +97,7 @@
   justify-content: space-around;
   align-items: center;
   width: 100%;
+  height: 4rem;
 }
 
 .form .editAction {

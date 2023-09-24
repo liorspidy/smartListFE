@@ -229,10 +229,12 @@ const AddToDb = ({ shopsList, fetchCurrentCart, fetchProducts ,setLoading}) => {
           </div>
           <ul className={classes.inputPricesContainer}>{inputPrices}</ul>
         </div>
+        <div className={classes.buttons}>
         <motion.button className={classes.addAction} type="submit" whileTap={{scale: 1.1}}>
           הוסף מוצר
           <AddIcon/>
         </motion.button>
+        </div>
       </form>
     </div>
   );
