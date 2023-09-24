@@ -8,9 +8,16 @@
   width: 100%;
   color: white;
   padding: 1rem 0.5rem;
-  padding-bottom: 6.5rem;
+  padding-bottom: 9.5rem;
   overflow: hidden;
 }
+
+@media (max-height: 700px) {
+  .editindb {
+    padding-bottom: 12.5rem;
+  }
+}
+
 
 .tabs {
   display: flex;
