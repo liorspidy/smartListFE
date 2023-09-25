@@ -28,6 +28,7 @@ const EditProduct = ({
   const [deletionSuccess, setDeletionSuccess] = useState(false);
   const [deletionError, setDeletionError] = useState("");
   const [updateError, setUpdateError] = useState("");
+  const [isDeletingProduct , setIsDeletingProduct] = useState(false);
 
   useEffect(() => {
     if (pickedProduct) {
@@ -145,6 +146,14 @@ const EditProduct = ({
     }
   };
 
+  const preDeleteProductHandler = () => {
+    setIsDeletingProduct(true);
+  };
+
+  const closeModalHandler = () => {
+    setIsDeletingProduct(false);
+  }
+
   const deleteProductHandler = async () => {
     const id = pickedProduct.id;
     try {
@@ -164,6 +173,7 @@ const EditProduct = ({
         setDeletionError("");
         fetchProducts();
         fetchCurrentCart();
+        closeModalHandler();
       } else {
         setDeletionSuccess(false);
         setDeletionError("Error deleting product");
@@ -194,6 +204,33 @@ const EditProduct = ({
   ));
 
   return (
+    <>
+    <div
+        className={`${classes.backdrop} ${
+          isDeletingProduct ? classes.active : ""
+        }`}
+        onClick={closeModalHandler}
+      >
+        <div
+          className={`${classes.modal} ${
+            isDeletingProduct ? classes.active : ""
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className={classes.validationText}>
+            <p>האם אתה בטוח שברצונך למחוק את</p>
+            <p>{pickedProduct?.name}?</p>
+          </div>
+          <div className={classes.validationButtons}>
+            <button className={classes.validationButton} onClick={deleteProductHandler}>
+              כן
+            </button>
+            <button className={classes.validationButton} onClick={closeModalHandler}>
+              לא
+            </button>
+          </div>
+        </div>
+      </div>
     <div className={classes.editindb}>
       <motion.div
         className={classes.finalStatus}
@@ -309,7 +346,7 @@ const EditProduct = ({
             className={classes.editAction}
             type="button" 
             whileTap={{ scale: 1.1 }}
-            onClick={deleteProductHandler}
+            onClick={preDeleteProductHandler}
           >
             הסר מוצר
             <DeleteIcon />
@@ -317,6 +354,7 @@ const EditProduct = ({
         </div>
       </form>
     </div>
+    </>
   );
 };
 
