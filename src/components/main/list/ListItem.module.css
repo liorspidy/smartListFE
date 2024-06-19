@@ -72,6 +72,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .listItem .pre .countActions {
@@ -87,7 +88,7 @@
   border-radius: 50%;
   background-color: white;
   color: var(--icon-color);
-  font-size: 1.25rem;
+  font-size: 1.35rem;
 }
 
 .listItem .content {

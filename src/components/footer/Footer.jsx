@@ -3,7 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { motion } from "framer-motion";
 import classes from "./Footer.module.css";
 
@@ -52,7 +52,7 @@ const Footer = ({
       </motion.div>
 
       <motion.div className={classes.iconBox} whileTap={{ scale: 1.15 }}>
-        <CompareArrowsIcon className={classes.icon} />
+        <CameraAltIcon className={classes.icon} />
       </motion.div>
 
       <motion.div

@@ -53,9 +53,10 @@ const EditModal = ({
   
           setPickedProduct(productWithPrices);
         }
-        setLoading(false);
       } catch (error) {
         console.error("Fetch error:", error);
+      } finally{
+        setLoading(false);
       }
     }
   

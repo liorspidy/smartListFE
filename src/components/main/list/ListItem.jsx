@@ -6,12 +6,19 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { motion } from "framer-motion";
 
-const ListItem = ({ product, idx, addAmount, decAmount, fetchCurrentCart ,setLoading}) => {
+const ListItem = ({
+  product,
+  idx,
+  addAmount,
+  decAmount,
+  fetchCurrentCart,
+  setLoading,
+}) => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [isSwiped, setIsSwiped] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [isNoPrice , setIsNoPrice] = useState(false);
+  const [isNoPrice, setIsNoPrice] = useState(false);
 
   const handleTouchStart = (e) => {
     setTouchStart(e.targetTouches[0].clientX);
@@ -24,18 +31,18 @@ const ListItem = ({ product, idx, addAmount, decAmount, fetchCurrentCart ,setLoa
   const handleTouchEnd = () => {
     //swipe left
     if (touchStart - touchEnd > 100) {
-      if(isSwiped){
+      if (isSwiped) {
         setIsSwiped(false);
-      }else{
+      } else {
         setIsChecked(true);
       }
     }
-    
+
     //swipe right
     if (touchStart - touchEnd < -100) {
-      if(!isChecked && !isSwiped){
+      if (!isChecked && !isSwiped) {
         setIsSwiped(true);
-      }else if(isChecked && !isSwiped){
+      } else if (isChecked && !isSwiped) {
         setIsChecked(false);
       }
     }
@@ -56,24 +63,27 @@ const ListItem = ({ product, idx, addAmount, decAmount, fetchCurrentCart ,setLoa
       setIsSwiped(false);
     } catch (error) {
       console.error("Error adding quantity to product:", error);
-    } finally{
+    } finally {
       setLoading(false);
     }
   };
 
-  useEffect(()=>{
-    if(product.price === "9999.00"){
+  useEffect(() => {
+    if (product.price === "9999.00") {
       setIsNoPrice(true);
     }
-  },[product])
+  }, [product]);
 
   return (
     <li
-      className={`${classes.listItem} ${isSwiped || isNoPrice ? classes.swiped : isChecked ? classes.checked : ""}`}
+      className={`${classes.listItem} ${
+        isSwiped || isNoPrice
+          ? classes.swiped
+          : isChecked
+          ? classes.checked
+          : ""
+      }`}
       key={idx}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
     >
       <div className={classes.pre}>
         <span className={classes.count}>{product.quantity}</span>
@@ -98,17 +108,25 @@ const ListItem = ({ product, idx, addAmount, decAmount, fetchCurrentCart ,setLoa
           </motion.div>
         </div>
       </div>
-      <div className={classes.content}>
+      <div
+        className={classes.content}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <div className={classes.right}>
           <div className={classes.productName}>{product.product_name}</div>
           <div className={classes.productBrand}>{product.brand_name}</div>
         </div>
         <div className={classes.left}>
-          {product.price !== "9999.00" && 
-          <span className={classes.productPrice}>
-            {(product.price * product.quantity).toFixed(2)} &#8362;
-          </span>}
-          {product.price === "9999.00" && <span className={classes.productPrice}>--</span>}
+          {product.price !== "9999.00" && (
+            <span className={classes.productPrice}>
+              {(product.price * product.quantity).toFixed(2)} &#8362;
+            </span>
+          )}
+          {product.price === "9999.00" && (
+            <span className={classes.productPrice}>--</span>
+          )}
         </div>
       </div>
       <div

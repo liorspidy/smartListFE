@@ -89,6 +89,7 @@
 
 .modal .amountActions .amountValue {
   font-size: 3rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .modal .amountActions .countIcon {
